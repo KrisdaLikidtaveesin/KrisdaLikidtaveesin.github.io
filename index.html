@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rick & Roll</title>
     <style>
-        body,html {
+        body, html {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -13,8 +13,7 @@
             overflow: hidden;
         }
 
-        video {
-            object-fit: cover;
+        #player {
             width: 100%;
             height: 100%;
             position: fixed;
@@ -24,21 +23,42 @@
     </style>
 </head>
 <body>
-    <video id="rick" width="100%" autoplay>
-        <source src="rickroll.mp4" type="video/mp4">
-    </video>
+    <div id="player"></div>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        const video = document.getElementById('rick');
+        let player;
 
-        video.volume = 0.1;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: 'QqoXK89q1aY', // ใส่ ID ของวิดีโอ YouTube ที่ต้องการเล่น
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 0,
+                    'showinfo': 0,
+                    'rel': 0,
+                    'loop': 1,
+                    'playlist': 'QqoXK89q1aY'
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                }
+            });
+        }
 
-        // เพิ่มเสียง ลดเสียง
-        document.addEventListener('keydown', event => {
-            if (event.key === 'ArrowUp')
-                video.volume = Math.min(1, video.volume + 0.1);
-            else if (event.key === 'ArrowDown')
-                video.volume = Math.max(0, video.volume - 0.1);
-        });
+        function onPlayerReady(event) {
+            event.target.setVolume(10); // ตั้งค่าเสียง
+            document.addEventListener('keydown', event => {
+                if (event.key === 'ArrowUp') {
+                    let currentVolume = player.getVolume();
+                    player.setVolume(Math.min(100, currentVolume + 10));
+                } else if (event.key === 'ArrowDown') {
+                    let currentVolume = player.getVolume();
+                    player.setVolume(Math.max(0, currentVolume - 10));
+                }
+            });
+        }
     </script>
 </body>
 </html>
