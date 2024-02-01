@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html __fvdsurfcanyoninserted="1"
-class="clickberry-extension clickberry-extension-standalone clickberry-extension clickberry-extension-standalone clickberry-extension clickberry-extension-standalone"
+<html
+  __fvdsurfcanyoninserted="1"
+  class="clickberry-extension clickberry-extension-standalone clickberry-extension clickberry-extension-standalone clickberry-extension clickberry-extension-standalone"
 >
   <head>
     <meta charset="UTF-8" />
@@ -32,7 +33,7 @@ class="clickberry-extension clickberry-extension-standalone clickberry-extension
         padding: 10px;
         margin: 0 auto;
         position: relative;
-        margin-top: 55%;
+        /* margin-top: 55%; */
       }
       .balloon {
         width: 738px;
@@ -307,20 +308,20 @@ class="clickberry-extension clickberry-extension-standalone clickberry-extension
       }
     </style>
     <script>
-        window.open = function () {};
-        window.print = function () {};
-        // Support hover state for mobile.
-        if (false) {
-          window.ontouchstart = function () {};
-        }
-      </script>
-      <script
+      window.open = function () {};
+      window.print = function () {};
+      // Support hover state for mobile.
+      if (false) {
+        window.ontouchstart = function () {};
+      }
+    </script>
+    <script
       type="text/javascript"
       src="chrome-extension://bfbmjmiodbnnpllbbbfblcplfjjepjdn/js/injected.js"
     ></script>
     <meta content="clickberry-extension-here" />
   </head>
-  <body onclick="toggleAudio()">
+  <body onclick="moveBalloonDown(); toggleAudio();">
     <link
       href="https://fonts.googleapis.com/css?family=Wendy+One"
       rel="stylesheet"
@@ -351,6 +352,32 @@ class="clickberry-extension clickberry-extension-standalone clickberry-extension
         } else {
           audio.pause();
         }
+      }
+
+      // if (document.location.search.match(/type=embed/gi)) {
+      //   window.parent.postMessage("resize", "*");
+      // }
+
+      let marginIncrement = 10; // You can adjust this value based on your preference
+
+      function moveBalloonDown() {
+        // Get the balloon container
+        let balloonContainer = document.querySelector(".balloon");
+
+        // Get the current margin-top value and convert it to a number
+        let currentMarginTop = parseInt(
+          getComputedStyle(balloonContainer).marginTop
+        );
+
+        // Increment the margin-top value
+        currentMarginTop += marginIncrement;
+
+        // Apply the new margin-top value
+        balloonContainer.style.marginTop = currentMarginTop + "px";
+      }
+
+      function toggleAudio() {
+        // Your existing toggleAudio function
       }
 
       if (document.location.search.match(/type=embed/gi)) {
