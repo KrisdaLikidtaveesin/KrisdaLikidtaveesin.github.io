@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy New Year</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        background: #000;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+      }
+      .message h1 {
+        font-size: 4rem;
+        text-shadow: 0 0 10px #ff0, 0 0 20px #ff0, 0 0 30px #f80;
+      }
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .new-year-image {
+        margin-top: 20px;
+        max-width: 100%;
+        width: 300px; /* หรือขนาดที่ต้องการ */
+        border-radius: 10px; /* เพิ่มมุมโค้งถ้าต้องการ */
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); /* เพิ่มแสงเงา */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="message">
+      <h1>🎆 Happy New Year 🎆</h1>
+      <p>อยู่ด้วยกันไปอีกปีนะ❤️</p>
+      <!-- <img src="/281554.jpg" alt="New Year Wishes" class="new-year-image" /> -->
+      <img
+        src="/image1.jpg"
+        alt="New Year Wishes"
+        class="new-year-image"
+        id="dynamicImage"
+      />
+    </div>
+
+    <audio autoplay loop>
+      <source src="เมื่อคืนฉันฝันว่า.mp3" type="audio/mpeg" />
+      <!-- Your browser does not support the audio element. -->
+    </audio>
+
+    <canvas></canvas>
+
+    <script>
+      const audio = document.querySelector("audio");
+      audio.volume = 0.5; // ตั้งระดับเสียงเป็น 50%
+
+      // รายชื่อรูปภาพที่ต้องการแสดง
+      const images = [
+        "image1.jpg",
+        "image2.jpg",
+        "image3.jpg",
+        "image4.jpg",
+        "image5.jpg",
+      ];
+
+      let currentImageIndex = 0;
+
+      // ฟังก์ชันสำหรับเปลี่ยนรูป
+      function changeImage() {
+        const imageElement = document.getElementById("dynamicImage");
+        currentImageIndex = (currentImageIndex + 1) % images.length; // วนลูปรูปภาพ
+        imageElement.src = images[currentImageIndex];
+      }
+
+      // เปลี่ยนรูปทุกๆ 3 วินาที
+      setInterval(changeImage, 5000);
+
+      const canvas = document.querySelector("canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ["#ff004f", "#ffa500", "#00ff6a", "#00cfff", "#ff00ff"];
+
+      class Particle {
+        constructor(x, y, dx, dy, color, size) {
+          this.x = x;
+          this.y = y;
+          this.dx = dx;
+          this.dy = dy;
+          this.color = color;
+          this.size = size;
+          this.opacity = 1;
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${this.color}, ${this.opacity})`;
+          ctx.fill();
+        }
+        update() {
+          this.x += this.dx;
+          this.y += this.dy;
+          this.opacity -= 0.02;
+        }
+      }
+
+      function explode(x, y) {
+        const particleCount = 30;
+        for (let i = 0; i < particleCount; i++) {
+          const dx = (Math.random() - 0.5) * 4;
+          const dy = (Math.random() - 0.5) * 4;
+          const size = Math.random() * 3 + 2;
+          const color = `${Math.floor(Math.random() * 256)}, ${Math.floor(
+            Math.random() * 256
+          )}, ${Math.floor(Math.random() * 256)}`;
+          particles.push(new Particle(x, y, dx, dy, color, size));
+        }
+      }
+
+      function animate() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach((particle, index) => {
+          if (particle.opacity <= 0) {
+            particles.splice(index, 1);
+          } else {
+            particle.update();
+            particle.draw();
+          }
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      function randomFirework() {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height * 0.5;
+        explode(x, y);
+      }
+
+      setInterval(randomFirework, 500);
+      animate();
+
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+    </script>
+  </body>
+</html>
